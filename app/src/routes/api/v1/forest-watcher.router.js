@@ -3,7 +3,7 @@ const Router = require('koa-router');
 const AreasService = require('services/areas.service');
 const GeoStoreService = require('services/geostore.service');
 const CoverageService = require('services/coverage.service');
-const TemplatesService = require('services/coverage.service');
+const TemplatesService = require('services/template.service');
 const ErrorSerializer = require('serializers/error.serializer');
 const config = require('config');
 

@@ -71,7 +71,7 @@ class ForestWatcherRouter {
                                 ...area.attributes,
                                 geostore: (geoStoreData && geoStoreData[index]) || {},
                                 coverage: (coverageData && coverageData[index].layers) || [],
-                                templateReport: (templatesData && templatesData[index]) || {}
+                                reportTemplate: (templatesData && templatesData[index]) || null
                             }
                         }));
                     }

@@ -24,11 +24,12 @@ class ForestWatcherRouter {
     static async getUserAreas(ctx) {
         const user = ForestWatcherRouter.getUser(ctx);
         logger.info('User requesting areas', user);
+        let areas = [];
 
         const includes = ctx.query.includes ? ctx.query.includes.split(',') : [];
         logger.info('CONTEXXX', includes);
         if (user && user.id) {
-            let areas = await AreasService.getUserAreas(user.id);
+            areas = await AreasService.getUserAreas(user.id);
             logger.info('Got user areas', areas);
             const promises = [];
             if (areas && areas.length) {
@@ -75,16 +76,12 @@ class ForestWatcherRouter {
                             }
                         }));
                     }
-
-                    ctx.body = areas;
                 }
-                ctx.body = areas;
-            } else {
-                ctx.body = [];
             }
-        } else {
-            ctx.body = [];
         }
+        ctx.body = {
+            data: areas
+        };
     }
 
 }

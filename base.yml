@@ -1,0 +1,8 @@
+base:
+  build: .
+  ports:
+    - "4400:4400"
+  container_name: forest-watcher
+  environment:
+    PORT: 4400
+    NODE_PATH: app/src

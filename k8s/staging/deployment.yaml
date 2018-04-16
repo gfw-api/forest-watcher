@@ -1,0 +1,59 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    name: {name}
+  name: {name}
+spec:
+  revisionHistoryLimit: 0
+  template:
+    metadata:
+      annotations:
+        chaos.alpha.kubernetes.io/enabled: "true"
+      labels:
+        name: {name}
+    spec:
+      containers:
+      - name: {name}
+        image: vizzuality/{name}
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: "0Mi"
+            cpu: "0m"
+        args:
+          - start
+        env:
+          - name: PORT
+            value: "4400"
+          - name: NODE_ENV
+            value: staging
+          - name: NODE_PATH
+            value: app/src
+          - name: LOCAL_URL
+            value: http://{name}.default.svc.cluster.local:4400
+          - name: CT_URL
+            valueFrom:
+                secretKeyRef:
+                  name: mssecrets
+                  key: CT_URL
+          - name: CT_TOKEN
+            valueFrom:
+                secretKeyRef:
+                  name: mssecrets
+                  key: CT_TOKEN
+          - name: CT_REGISTER_MODE
+            valueFrom:
+                secretKeyRef:
+                  name: mssecrets
+                  key: CT_REGISTER_MODE
+          - name: API_VERSION
+            valueFrom:
+                secretKeyRef:
+                  name: mssecrets
+                  key: API_VERSION
+
+        ports:
+          - containerPort: 4400
+
+      restartPolicy: Always

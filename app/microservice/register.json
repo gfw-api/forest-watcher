@@ -1,0 +1,15 @@
+{
+	"name": "#(service.name)",
+	"tags": ["forest-watcher"],
+	"cache": ["forest-watcher"],
+	"uncache": ["forest-watcher"],
+	"endpoints": [{
+		"path": "/v1/forest-watcher/areas",
+		"method": "GET",
+		"authenticated": true,
+		"redirect": {
+			"method": "GET",
+			"path": "/api/v1/forest-watcher/areas"
+		}
+	}]
+}

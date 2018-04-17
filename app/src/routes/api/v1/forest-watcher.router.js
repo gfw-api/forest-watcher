@@ -39,17 +39,19 @@ class ForestWatcherRouter {
     }
 
     static getDatasetsWithCoverage(datasets = globalAlerts, layers = []) {
+        logger.info('Parsing area datasets with datasets', datasets);
+        logger.info('With coverage', layers);
         const glad = {
             slug: 'umd_as_it_happens',
             name: 'GLAD',
             active: false,
             startDate: 6,
-            endDate: moment().format('YYYYMMDD') // TODO: think a way to standarize with viirs
+            endDate: moment().format('YYYYMMDD')
         };
-        const newDatasets = [];
 
         const areaHasGlad = layers.includes(glad.slug);
         const datasetsHasGlad = datasets.find(dataset => dataset.slug === glad.slug);
+        logger.info('has new glad coverage?', areaHasGlad, datasetsHasGlad);
         if (areaHasGlad && !datasetsHasGlad) {
             return ForestWatcherRouter.getDatasetsWithActive([glad, ...datasets]);
         }
@@ -58,22 +60,17 @@ class ForestWatcherRouter {
 
     static async getUserAreas(ctx) {
         const user = ForestWatcherRouter.getUser(ctx);
-        logger.info('User requesting areas', user);
         let areas = [];
 
         const includes = ctx.query.includes ? ctx.query.includes.split(',') : [];
-        logger.info('CONTEXXX', includes);
         if (user && user.id) {
             areas = await AreasService.getUserAreas(user.id);
-            logger.info('Got user areas', areas);
             const promises = [];
             if (areas && areas.length) {
-                logger.info('Including area coverage');
-                const areaPromises = areas.map(area => CoverageService.getCoverage(area.attributes.geostore));
-                promises.push(Promise.all(areaPromises));
+                const coveragePromises = areas.map(area => CoverageService.getCoverage(area.attributes.geostore));
+                promises.push(Promise.all(coveragePromises));
 
                 if (includes.includes('geostore')) {
-                    logger.info('Including area geostores');
                     const areaPromises = areas.map(area => GeoStoreService.getGeostore(area.attributes.geostore));
                     promises.push(Promise.all(areaPromises));
                 } else {
@@ -81,7 +78,6 @@ class ForestWatcherRouter {
                 }
 
                 if (includes.includes('templates')) {
-                    logger.info('Including area templates');
                     const areaPromises = areas.map(area => (
                         area.attributes.templateId
                             ? TemplatesService.getTemplate(area.attributes.templateId)
@@ -100,10 +96,11 @@ class ForestWatcherRouter {
 
                     if (geoStoreData.length) {
                         areas = areas.map((area, index) => {
+                            logger.info('Area datasets', area);
                             const geostore = geoStoreData[index] || {};
                             const reportTemplate = templatesData[index] || null;
                             const coverage = coverageData[index].layers || [];
-                            const datasets = ForestWatcherRouter.getDatasetsWithCoverage(area.datasets, coverage);
+                            const datasets = ForestWatcherRouter.getDatasetsWithCoverage(area.attributes.datasets, coverage);
                             return {
                                 ...area,
                                 attributes: {
@@ -113,7 +110,7 @@ class ForestWatcherRouter {
                                     coverage,
                                     reportTemplate
                                 }
-                            }
+                            };
                         });
                     }
                 }

@@ -9,7 +9,7 @@ GET /areas
 
 Params availables:
 ```
-includes=geostore,coverage,templates
+includes=geostore,templates
 ```
 
 Will embed the resources includes

@@ -53,6 +53,7 @@
     "koa-router": "^7.0.1",
     "koa-validate": "^1.0.7",
     "microservice-cache-middleware": "^1.0.0",
+    "moment": "2.22.1",
     "request": "^2.79.0",
     "request-promise": "^4.1.1",
     "uuid": "^3.0.1"

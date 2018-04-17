@@ -4,9 +4,7 @@ const AreasService = require('services/areas.service');
 const GeoStoreService = require('services/geostore.service');
 const CoverageService = require('services/coverage.service');
 const TemplatesService = require('services/template.service');
-const ErrorSerializer = require('serializers/error.serializer');
 const moment = require('moment');
-const config = require('config');
 
 const router = new Router({
     prefix: '/forest-watcher',
@@ -48,7 +46,7 @@ class ForestWatcherRouter {
             startDate: 6,
             endDate: moment().format('YYYYMMDD') // TODO: think a way to standarize with viirs
         };
-        const newDatasets = []
+        const newDatasets = [];
 
         const areaHasGlad = layers.includes(glad.slug);
         const datasetsHasGlad = datasets.find(dataset => dataset.slug === glad.slug);

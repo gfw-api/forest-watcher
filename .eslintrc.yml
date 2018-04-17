@@ -1,5 +1,5 @@
 ---
-extends: airbnb
+extends: airbnb-base
 env:
   node: true
   es6: true
@@ -33,7 +33,6 @@ settings:
       extensions:
         # if unset, default is just '.js', but it must be re-added explicitly if set
         - .js
-        - .jsx
         - .es6
         - .coffee
 

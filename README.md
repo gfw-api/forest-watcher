@@ -5,7 +5,7 @@ Centralized microservice to handle all of the forest-watcher necessities
 
 ### Areas
 
-GET /areas
+GET /area
 
 Params availables:
 ```

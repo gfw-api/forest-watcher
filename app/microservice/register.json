@@ -3,13 +3,24 @@
 	"tags": ["forest-watcher"],
 	"cache": ["forest-watcher"],
 	"uncache": ["forest-watcher"],
-	"endpoints": [{
-		"path": "/v1/forest-watcher/areas",
-		"method": "GET",
-		"authenticated": true,
-		"redirect": {
+	"endpoints": [
+		{
+			"path": "/v1/forest-watcher/area",
 			"method": "GET",
-			"path": "/api/v1/forest-watcher/areas"
+			"authenticated": true,
+			"redirect": {
+				"method": "GET",
+				"path": "/api/v1/forest-watcher/area"
+			}
+		},
+		{
+			"path": "/v1/forest-watcher/area",
+			"method": "POST",
+			"authenticated": true,
+			"redirect": {
+				"method": "POST",
+				"path": "/api/v1/forest-watcher/area"
+			}
 		}
-	}]
+	]
 }

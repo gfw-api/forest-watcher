@@ -23,6 +23,40 @@ const globalAlerts = [
 
 class ForestWatcherRouter {
 
+    static async buildAreasResponse(areas = [], geostoreObj) {
+        const promises = [
+            Promise.all(areas.map(area => CoverageService.getCoverage(area.attributes.geostore))),
+            Promise.all(areas.map(area => (area.attributes.templateId
+                ? TemplatesService.getTemplate(area.attributes.templateId)
+                : null
+            )))
+        ];
+
+        if (!geostoreObj) {
+            promises.push(Promise.all(areas.map(area => GeoStoreService.getGeostore(area.attributes.geostore))));
+        }
+
+        const data = await Promise.all(promises);
+        const [coverageData, templatesData, geostoreData] = data;
+
+        return areas.map((area, index) => {
+            const geostore = geostoreObj || (geostoreData[index] || {});
+            const reportTemplate = templatesData[index] || null;
+            const coverage = coverageData[index] ? coverageData[index].layers : [];
+            const datasets = ForestWatcherRouter.getDatasetsWithCoverage(area.attributes.datasets, coverage);
+            return {
+                ...area,
+                attributes: {
+                    ...area.attributes,
+                    geostore,
+                    datasets,
+                    coverage,
+                    reportTemplate
+                }
+            };
+        });
+    }
+
     static getUser(ctx) {
         let user = Object.assign({}, ctx.request.query.loggedUser ? JSON.parse(ctx.request.query.loggedUser) : {}, ctx.request.body.loggedUser);
         if (ctx.request.body.fields) {
@@ -38,7 +72,8 @@ class ForestWatcherRouter {
         return datasets;
     }
 
-    static getDatasetsWithCoverage(datasets = globalAlerts, layers = []) {
+    static getDatasetsWithCoverage(list, layers = []) {
+        const datasets = (!list || list.length === 0) ? globalAlerts : list;
         logger.info('Parsing area datasets with datasets', datasets);
         logger.info('With coverage', layers);
         const glad = {
@@ -46,7 +81,7 @@ class ForestWatcherRouter {
             name: 'GLAD',
             active: false,
             startDate: 6,
-            endDate: moment().format('YYYYMMDD') // TODO: think a way to standarize with viirs
+            endDate: moment().format('YYYYMMDD')
         };
 
         const areaHasGlad = layers.includes(glad.slug);
@@ -60,77 +95,33 @@ class ForestWatcherRouter {
 
     static async getUserAreas(ctx) {
         const user = ForestWatcherRouter.getUser(ctx);
-        logger.info('User requesting areas', user);
-        let areas = [];
-
-        const includes = ctx.query.includes ? ctx.query.includes.split(',') : [];
-        logger.info('CONTEXXX', includes);
+        let data = [];
         if (user && user.id) {
-            areas = await AreasService.getUserAreas(user.id);
-            logger.info('Got user areas', areas);
-            const promises = [];
-            if (areas && areas.length) {
-                logger.info('Including area coverage');
-                const areaPromises = areas.map(area => CoverageService.getCoverage(area.attributes.geostore));
-                promises.push(Promise.all(areaPromises));
-
-                if (includes.includes('geostore')) {
-                    logger.info('Including area geostores');
-                    const areaPromises = areas.map(area => GeoStoreService.getGeostore(area.attributes.geostore));
-                    promises.push(Promise.all(areaPromises));
-                } else {
-                    promises.push([]);
-                }
-
-                if (includes.includes('templates')) {
-                    logger.info('Including area templates');
-                    const areaPromises = areas.map(area => (
-                        area.attributes.templateId
-                            ? TemplatesService.getTemplate(area.attributes.templateId)
-                            : ''
-                    ));
-                    promises.push(Promise.all(areaPromises));
-                } else {
-                    promises.push([]);
-                }
-                if (promises.length) {
-                    const data = await Promise.all(promises);
-                    logger.info('DATA', data);
-                    const coverageData = data[0];
-                    const geoStoreData = data[1];
-                    const templatesData = data[2];
-
-                    if (geoStoreData.length) {
-                        areas = areas.map((area, index) => {
-                            logger.info('Area datasets', area);
-                            const geostore = geoStoreData[index] || {};
-                            const reportTemplate = templatesData[index] || null;
-                            const coverage = coverageData[index].layers || [];
-                            logger.info('Parsing area datasets', area.attributes.datasets);
-                            const datasets = ForestWatcherRouter.getDatasetsWithCoverage(area.attributes.datasets, coverage);
-                            logger.info('Got datasets parsed', datasets);
-                            return {
-                                ...area,
-                                attributes: {
-                                    ...area.attributes,
-                                    geostore,
-                                    datasets,
-                                    coverage,
-                                    reportTemplate
-                                }
-                            };
-                        });
-                    }
-                }
-            }
+            const areas = await AreasService.getUserAreas(user.id);
+            data = ForestWatcherRouter.buildAreasResponse(areas);
         }
         ctx.body = {
-            data: areas
+            data
+        };
+    }
+
+    static async createArea(ctx) {
+        const user = ForestWatcherRouter.getUser(ctx);
+        const { geojson, name } = ctx.request.body.fields;
+        const { image } = ctx.request.body.files;
+        const { area, geostore } = await AreasService.createAreaWithGeostore({ name, image }, JSON.parse(geojson));
+        let data = null;
+        if (user && user.id) {
+            [data] = await ForestWatcherRouter.buildAreasResponse([area.data], geostore);
+        }
+        ctx.body = {
+            data
         };
     }
 
 }
 
-router.get('/areas', ForestWatcherRouter.getUserAreas);
+router.get('/area', ForestWatcherRouter.getUserAreas);
+router.post('/area', ForestWatcherRouter.createArea);
 
 module.exports = router;

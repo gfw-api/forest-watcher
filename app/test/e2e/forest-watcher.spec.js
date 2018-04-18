@@ -11,7 +11,7 @@ describe('E2E test', () => {
         it('Get fw user areas', async() => {
             let response = null;
             try {
-                response = await request.get(`${BASE_URL}/forest-watcher/areas`).send();
+                response = await request.get(`${BASE_URL}/forest-watcher/area`).send();
             } catch (e) {
                 logger.error(e);
             }

@@ -108,9 +108,9 @@ class ForestWatcherRouter {
         const user = ForestWatcherRouter.getUser(ctx);
         const { geojson, name } = ctx.request.body.fields;
         const { image } = ctx.request.body.files;
-        const { area, geostore } = await AreasService.createAreaWithGeostore({ name, image }, JSON.parse(geojson));
         let data = null;
         if (user && user.id) {
+            const { area, geostore } = await AreasService.createAreaWithGeostore({ name, image }, JSON.parse(geojson), user.id);
             [data] = await ForestWatcherRouter.buildAreasResponse([area.data], geostore);
         }
         ctx.body = {

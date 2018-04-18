@@ -16,11 +16,11 @@ class AreasService {
         return areas && areas.data;
     }
 
-    static async createAreaWithGeostore({ name, image }, geojson) {
+    static async createAreaWithGeostore({ name, image }, geojson, userId) {
         logger.info('Create area with geostore');
         const geostore = await GeoStoreService.createGeostore(geojson);
         const area = await ct.requestToMicroservice({
-            uri: '/area',
+            uri: `/area/fw/${userId}`,
             method: 'POST',
             formData: {
                 name,

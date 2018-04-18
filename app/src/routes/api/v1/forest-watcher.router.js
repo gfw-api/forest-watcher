@@ -86,7 +86,6 @@ class ForestWatcherRouter {
 
         const areaHasGlad = layers.includes(glad.slug);
         const datasetsHasGlad = datasets.find(dataset => dataset.slug === glad.slug);
-        logger.info('has new glad coverage?', areaHasGlad, datasetsHasGlad);
         if (areaHasGlad && !datasetsHasGlad) {
             return ForestWatcherRouter.getDatasetsWithActive([glad, ...datasets]);
         }
@@ -98,7 +97,7 @@ class ForestWatcherRouter {
         let data = [];
         if (user && user.id) {
             const areas = await AreasService.getUserAreas(user.id);
-            data = ForestWatcherRouter.buildAreasResponse(areas);
+            data = await ForestWatcherRouter.buildAreasResponse(areas);
         }
         ctx.body = {
             data

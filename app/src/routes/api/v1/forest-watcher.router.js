@@ -96,8 +96,16 @@ class ForestWatcherRouter {
         const user = ForestWatcherRouter.getUser(ctx);
         let data = [];
         if (user && user.id) {
-            const areas = await AreasService.getUserAreas(user.id);
-            data = await ForestWatcherRouter.buildAreasResponse(areas);
+            try {
+                const areas = await AreasService.getUserAreas(user.id);
+                try {
+                    data = await ForestWatcherRouter.buildAreasResponse(areas);
+                } catch (e) {
+                    ctx.throw(500, 'Error while retrieving area\'s geostore, template, and coverage');
+                }
+            } catch (e) {
+                ctx.throw(500, 'Error while retrieving area');
+            }
         }
         ctx.body = {
             data
@@ -110,8 +118,18 @@ class ForestWatcherRouter {
         const { image } = ctx.request.body.files;
         let data = null;
         if (user && user.id) {
-            const { area, geostore } = await AreasService.createAreaWithGeostore({ name, image }, JSON.parse(geojson), user.id);
-            [data] = await ForestWatcherRouter.buildAreasResponse([area.data], geostore);
+            try {
+                const { area, geostore } = await AreasService.createAreaWithGeostore(ctx, { name, image }, JSON.parse(geojson), user.id);
+                try {
+                    [data] = await ForestWatcherRouter.buildAreasResponse([area.data], geostore);
+                } catch (e) {
+                    logger.error(e);
+                    ctx.throw(500, 'Error while retrieving area\'s template and coverage');
+                }
+            } catch (e) {
+                logger.error(e);
+                ctx.throw(500, 'Error while creating area');
+            }
         }
         ctx.body = {
             data

@@ -23,9 +23,8 @@ const globalAlerts = [
 
 class ForestWatcherRouter {
 
-    static async buildAreasResponse(areas = [], geostoreObj) {
+    static async buildAreasResponse(areas = [], { geostoreObj, coverageObj } = {}) {
         const promises = [
-            Promise.all(areas.map(area => CoverageService.getCoverage(area.attributes.geostore))),
             Promise.all(areas.map(area => (area.attributes.templateId
                 ? TemplatesService.getTemplate(area.attributes.templateId)
                 : null
@@ -35,9 +34,12 @@ class ForestWatcherRouter {
         if (!geostoreObj) {
             promises.push(Promise.all(areas.map(area => GeoStoreService.getGeostore(area.attributes.geostore))));
         }
+        if (!coverageObj) {
+            promises.push(Promise.all(areas.map(area => CoverageService.getCoverage(area.attributes.geostore))));
+        }
         try {
             const data = await Promise.all(promises);
-            const [coverageData, templatesData, geostoreData] = data;
+            const [templatesData, geostoreData, coverageData] = data;
 
             return areas.map((area, index) => {
                 const geostore = geostoreObj || (geostoreData[index] || {});
@@ -119,19 +121,18 @@ class ForestWatcherRouter {
 
     static async createArea(ctx) {
         const user = ForestWatcherRouter.getUser(ctx);
-        const { geojson, name } = ctx.request.body.fields;
+        const { geojson, name } = ctx.request.body.fields || {};
         const { image } = ctx.request.body.files;
         let data = null;
         if (user && user.id) {
             try {
-                const { area, geostore } = await AreasService.createAreaWithGeostore({ name, image }, JSON.parse(geojson), user.id);
+                const { area, geostore, coverage } = await AreasService.createAreaWithGeostore({ name, image }, JSON.parse(geojson), user.id);
                 logger.info('Created area', area);
                 try {
-                    [data] = await ForestWatcherRouter.buildAreasResponse([area.data], geostore);
+                    [data] = await ForestWatcherRouter.buildAreasResponse([area.data], { geostore, coverage });
                 } catch (e) {
-                    await AreasService.deleteArea(area.data.id);
                     logger.error(e);
-                    ctx.throw(e.status, 'Error while retrieving area\'s template and coverage');
+                    ctx.throw(e.status, 'Error while retrieving area\'s template');
                 }
             } catch (e) {
                 logger.error(e);

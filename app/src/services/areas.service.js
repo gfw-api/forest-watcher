@@ -1,24 +1,10 @@
 const logger = require('logger');
 const ct = require('ct-register-microservice-node');
 const { createReadStream } = require('fs');
+const CoverageService = require('services/coverage.service');
 const GeoStoreService = require('services/geostore.service');
 
 class AreasService {
-
-    static async deleteArea(areaId) {
-        logger.info('Deleting area with id', areaId);
-        try {
-            await ct.requestToMicroservice({
-                uri: `/area/${areaId}`,
-                method: 'DELETE',
-                json: true
-            });
-            logger.info('Deleted area');
-        } catch (e) {
-            logger.error('Error while deleting area', e);
-            throw e;
-        }
-    }
 
     static async getUserAreas(userId) {
         logger.info('Get user areas', userId);
@@ -40,12 +26,19 @@ class AreasService {
         logger.info('Create area with params', { name, userId });
         logger.info('Create area with geojson', geojson);
         let geostore;
+        let coverage;
         let area;
 
         try {
             geostore = await GeoStoreService.createGeostore(geojson);
         } catch (e) {
             logger.error('Error while creating geostore', e);
+            throw e;
+        }
+        try {
+            coverage = await CoverageService.getCoverage(geostore.id);
+        } catch (e) {
+            logger.error('Error while getting area coverage', e);
             throw e;
         }
         try {
@@ -58,7 +51,7 @@ class AreasService {
                     image: createReadStream(image.path)
                 }
             });
-            return { geostore, area: JSON.parse(area) };
+            return { geostore, area: JSON.parse(area), coverage };
         } catch (e) {
             logger.error('Error while creating area with geostore', e);
             throw e;

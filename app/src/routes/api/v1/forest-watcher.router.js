@@ -106,10 +106,10 @@ class ForestWatcherRouter {
                 try {
                     data = await ForestWatcherRouter.buildAreasResponse(areas);
                 } catch (e) {
-                    ctx.throw(500, 'Error while retrieving area\'s geostore, template, and coverage');
+                    ctx.throw(e.status, 'Error while retrieving area\'s geostore, template, and coverage');
                 }
             } catch (e) {
-                ctx.throw(500, 'Error while retrieving area');
+                ctx.throw(e.status, 'Error while retrieving area');
             }
         }
         ctx.body = {
@@ -129,11 +129,11 @@ class ForestWatcherRouter {
                     [data] = await ForestWatcherRouter.buildAreasResponse([area.data], geostore);
                 } catch (e) {
                     logger.error(e);
-                    ctx.throw(500, 'Error while retrieving area\'s template and coverage');
+                    ctx.throw(e.status, 'Error while retrieving area\'s template and coverage');
                 }
             } catch (e) {
                 logger.error(e);
-                ctx.throw(500, 'Error while creating area');
+                ctx.throw(e.status, 'Error while creating area');
             }
         }
         ctx.body = {

@@ -22,7 +22,8 @@ class AreasService {
     }
 
     static async createAreaWithGeostore({ name, image }, geojson, userId) {
-        logger.info('Create area with geostore');
+        logger.info('Create area with params', { name, userId });
+        logger.info('Create area with geojson', geojson);
         let geostore;
         let area;
 

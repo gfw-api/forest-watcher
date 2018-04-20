@@ -124,7 +124,7 @@ class ForestWatcherRouter {
         let data = null;
         if (user && user.id) {
             try {
-                const { area, geostore } = await AreasService.createAreaWithGeostore(ctx, { name, image }, JSON.parse(geojson), user.id);
+                const { area, geostore } = await AreasService.createAreaWithGeostore({ name, image }, JSON.parse(geojson), user.id);
                 try {
                     [data] = await ForestWatcherRouter.buildAreasResponse([area.data], geostore);
                 } catch (e) {

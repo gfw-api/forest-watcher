@@ -5,6 +5,21 @@ const GeoStoreService = require('services/geostore.service');
 
 class AreasService {
 
+    static async deleteArea(areaId) {
+        logger.info('Deleting area with id', areaId);
+        try {
+            await ct.requestToMicroservice({
+                uri: `/area/${areaId}`,
+                method: 'DELETE',
+                json: true
+            });
+            logger.info('Deleted area');
+        } catch (e) {
+            logger.error('Error while deleting area', e);
+            throw e;
+        }
+    }
+
     static async getUserAreas(userId) {
         logger.info('Get user areas', userId);
         try {

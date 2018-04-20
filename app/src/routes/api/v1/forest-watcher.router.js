@@ -125,9 +125,11 @@ class ForestWatcherRouter {
         if (user && user.id) {
             try {
                 const { area, geostore } = await AreasService.createAreaWithGeostore({ name, image }, JSON.parse(geojson), user.id);
+                logger.info('Created area', area);
                 try {
                     [data] = await ForestWatcherRouter.buildAreasResponse([area.data], geostore);
                 } catch (e) {
+                    await AreasService.deleteArea(area.id);
                     logger.error(e);
                     ctx.throw(e.status, 'Error while retrieving area\'s template and coverage');
                 }

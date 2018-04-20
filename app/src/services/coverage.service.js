@@ -6,13 +6,18 @@ class CoverageService {
 
     static async getCoverage(geostoreId) {
         logger.info('Getting coverage with geostore id', geostoreId);
-        const coverage = await ctRegisterMicroservice.requestToMicroservice({
-            uri: `/coverage/intersect?geostore=${geostoreId}`,
-            method: 'GET',
-            json: true
-        });
-        logger.info('Got coverage', coverage);
-        return deserializer(coverage);
+        try {
+            const coverage = await ctRegisterMicroservice.requestToMicroservice({
+                uri: `/coverage/intersect?geostore=${geostoreId}`,
+                method: 'GET',
+                json: true
+            });
+            logger.info('Got coverage', coverage);
+            return deserializer(coverage);
+        } catch (e) {
+            logger.error('Error while fetching coverage', e);
+            throw e;
+        }
     }
 
 }

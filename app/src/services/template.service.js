@@ -6,13 +6,18 @@ class TemplateService {
 
     static async getTemplate(templateId) {
         logger.info('Getting template with id', templateId);
-        const template = await ctRegisterMicroservice.requestToMicroservice({
-            uri: `/reports/${templateId}`,
-            method: 'GET',
-            json: true
-        });
-        logger.info('Got template', template);
-        return deserializer(template);
+        try {
+            const template = await ctRegisterMicroservice.requestToMicroservice({
+                uri: `/reports/${templateId}`,
+                method: 'GET',
+                json: true
+            });
+            logger.info('Got template', template);
+            return deserializer(template);
+        } catch (e) {
+            logger.error('Error while fetching template', e);
+            throw e;
+        }
     }
 
 }

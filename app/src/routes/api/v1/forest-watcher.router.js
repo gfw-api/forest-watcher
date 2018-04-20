@@ -35,26 +35,31 @@ class ForestWatcherRouter {
         if (!geostoreObj) {
             promises.push(Promise.all(areas.map(area => GeoStoreService.getGeostore(area.attributes.geostore))));
         }
+        try {
+            const data = await Promise.all(promises);
+            const [coverageData, templatesData, geostoreData] = data;
 
-        const data = await Promise.all(promises);
-        const [coverageData, templatesData, geostoreData] = data;
+            return areas.map((area, index) => {
+                const geostore = geostoreObj || (geostoreData[index] || {});
+                const reportTemplate = templatesData[index] || null;
+                const coverage = coverageData[index] ? coverageData[index].layers : [];
+                const datasets = ForestWatcherRouter.getDatasetsWithCoverage(area.attributes.datasets, coverage);
+                return {
+                    ...area,
+                    attributes: {
+                        ...area.attributes,
+                        geostore,
+                        datasets,
+                        coverage,
+                        reportTemplate
+                    }
+                };
+            });
+        } catch (e) {
+            logger.error('Error while fetching coverage, templates, geostore', e);
+            throw e;
+        }
 
-        return areas.map((area, index) => {
-            const geostore = geostoreObj || (geostoreData[index] || {});
-            const reportTemplate = templatesData[index] || null;
-            const coverage = coverageData[index] ? coverageData[index].layers : [];
-            const datasets = ForestWatcherRouter.getDatasetsWithCoverage(area.attributes.datasets, coverage);
-            return {
-                ...area,
-                attributes: {
-                    ...area.attributes,
-                    geostore,
-                    datasets,
-                    coverage,
-                    reportTemplate
-                }
-            };
-        });
     }
 
     static getUser(ctx) {

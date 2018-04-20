@@ -7,26 +7,36 @@ class GeostoreService {
 
     static async getGeostore(geostoreId) {
         logger.info('Getting geostore with id', geostoreId);
-        const geostore = await ct.requestToMicroservice({
-            uri: `/geostore/${geostoreId}`,
-            method: 'GET',
-            json: true
-        });
-        logger.info('Got geostore', geostore);
-        return deserializer(geostore);
+        try {
+            const geostore = await ct.requestToMicroservice({
+                uri: `/geostore/${geostoreId}`,
+                method: 'GET',
+                json: true
+            });
+            logger.info('Got geostore', geostore);
+            return deserializer(geostore);
+        } catch (e) {
+            logger.error('Error while fetching geostore', e);
+            throw e;
+        }
     }
 
     static async createGeostore(geojson) {
-        const geostore = await ct.requestToMicroservice({
-            uri: '/geostore',
-            method: 'POST',
-            body: {
-                geojson,
-                lock: true
-            },
-            json: true
-        });
-        return deserializer(geostore);
+        try {
+            const geostore = await ct.requestToMicroservice({
+                uri: '/geostore',
+                method: 'POST',
+                body: {
+                    geojson,
+                    lock: true
+                },
+                json: true
+            });
+            return deserializer(geostore);
+        } catch (e) {
+            logger.error('Error while creating geostore', e);
+            throw e;
+        }
     }
 
 }

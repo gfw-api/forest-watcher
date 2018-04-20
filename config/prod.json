@@ -1,7 +1,7 @@
 {
     "logger": {
         "name": "forest-watcher",
-        "level": "warn",
+        "level": "debug",
         "toFile": false,
         "dirLogFile": null
     }

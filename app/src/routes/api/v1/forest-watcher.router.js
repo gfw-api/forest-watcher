@@ -129,7 +129,7 @@ class ForestWatcherRouter {
                 try {
                     [data] = await ForestWatcherRouter.buildAreasResponse([area.data], geostore);
                 } catch (e) {
-                    await AreasService.deleteArea(area.attributes.id);
+                    await AreasService.deleteArea(area.data.id);
                     logger.error(e);
                     ctx.throw(e.status, 'Error while retrieving area\'s template and coverage');
                 }

@@ -4,11 +4,11 @@ const deserializer = require('serializers/deserializer');
 
 class CoverageService {
 
-    static async getCoverage(geostoreId) {
+    static async getCoverage({ geostoreId, slugs = '', precision = 0.01 }) {
         logger.info('Getting coverage with geostore id', geostoreId);
         try {
             const coverage = await ctRegisterMicroservice.requestToMicroservice({
-                uri: `/coverage/intersect?geostore=${geostoreId}`,
+                uri: `/coverage/intersect?geostore=${geostoreId}&slugs=${slugs}&precision=${precision}`,
                 method: 'GET',
                 json: true
             });

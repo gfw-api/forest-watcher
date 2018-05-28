@@ -8,5 +8,6 @@
     "service": {
         "name": "Forest-watcher",
         "port": 4400
-    }
+    },
+    "alertsSupported": "umd_as_it_happens"
 }

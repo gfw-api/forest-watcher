@@ -41,8 +41,8 @@ class ForestWatcherRouter {
             promises.push(Promise.all(areas.map((area) => {
                 const params = {
                     geostoreId: area.attributes.geostore,
-                    slugs: ALERTS_SUPPORTED,
-                    precision: 0.01,
+                    // slugs: ALERTS_SUPPORTED,
+                    // precision: 0.01,
                 };
                 return CoverageService.getCoverage(params);
             })));

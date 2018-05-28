@@ -5,6 +5,9 @@ const GeoStoreService = require('services/geostore.service');
 const CoverageService = require('services/coverage.service');
 const TemplatesService = require('services/template.service');
 const moment = require('moment');
+const config = require('config');
+
+const ALERTS_SUPPORTED = config.get('alertsSupported');
 
 const router = new Router({
     prefix: '/forest-watcher',
@@ -35,7 +38,14 @@ class ForestWatcherRouter {
             promises.push(Promise.all(areas.map(area => GeoStoreService.getGeostore(area.attributes.geostore))));
         }
         if (!coverageObj) {
-            promises.push(Promise.all(areas.map(area => CoverageService.getCoverage(area.attributes.geostore))));
+            promises.push(Promise.all(areas.map((area) => {
+                const params = {
+                    geostoreId: area.attributes.geostore,
+                    slugs: ALERTS_SUPPORTED,
+                    precision: 0.01,
+                };
+                return CoverageService.getCoverage(params);
+            })));
         }
         try {
             const data = await Promise.all(promises);

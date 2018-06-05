@@ -3,6 +3,9 @@ const ct = require('ct-register-microservice-node');
 const { createReadStream } = require('fs');
 const CoverageService = require('services/coverage.service');
 const GeoStoreService = require('services/geostore.service');
+const config = require('config');
+
+const ALERTS_SUPPORTED = config.get('alertsSupported');
 
 class AreasService {
 
@@ -23,8 +26,8 @@ class AreasService {
     }
 
     static async createAreaWithGeostore({ name, image }, geojson, userId) {
-        logger.info('Create area with params', { name, userId });
-        logger.info('Create area with geojson', geojson);
+        logger.info('Start area creation with params', { name, userId });
+        logger.info('Start area creation with geojson', geojson);
         let geostore;
         let coverage;
         let area;
@@ -36,12 +39,17 @@ class AreasService {
             throw e;
         }
         try {
-            coverage = await CoverageService.getCoverage(geostore.id);
+            const params = {
+                geostoreId: geostore.id,
+                slugs: ALERTS_SUPPORTED
+            };
+            coverage = await CoverageService.getCoverage(params);
         } catch (e) {
             logger.error('Error while getting area coverage', e);
             throw e;
         }
         try {
+            logger.info('Creating area with geostore and coverage ready');
             area = await ct.requestToMicroservice({
                 uri: `/area/fw/${userId}`,
                 method: 'POST',
@@ -51,6 +59,7 @@ class AreasService {
                     image: createReadStream(image.path)
                 }
             });
+            logger.info('Area created', area);
             return { geostore, area: JSON.parse(area), coverage };
         } catch (e) {
             logger.error('Error while creating area with geostore', e);

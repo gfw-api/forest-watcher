@@ -1,6 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
+  namespace: fw
   labels:
     name: {name}
     app: gfw
@@ -33,7 +34,7 @@ spec:
           - name: NODE_PATH
             value: app/src
           - name: LOCAL_URL
-            value: http://{name}.default.svc.cluster.local:4400
+            value: http://{name}.fw.svc.cluster.local:4400
           - name: CT_URL
             valueFrom:
                 secretKeyRef:

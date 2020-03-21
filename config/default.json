@@ -1,13 +1,13 @@
 {
-     "logger": {
-        "name": "forest-watcher-DEV",
-        "level": "debug",
-        "toFile": false,
-        "dirLogFile": null
-    },
-    "service": {
-        "name": "Forest-watcher",
-        "port": 4400
-    },
-    "alertsSupported": "umd_as_it_happens"
+  "logger": {
+    "name": "forest-watcher-DEV",
+    "level": "debug",
+    "toFile": false,
+    "dirLogFile": null
+  },
+  "service": {
+    "name": "Forest-watcher",
+    "port": 4400
+  },
+  "alertsSupported": "umd_as_it_happens"
 }

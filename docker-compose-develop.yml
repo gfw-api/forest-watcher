@@ -1,14 +1,19 @@
-develop:
-  extends:
-    file: base.yml
-    service: base
-  environment:
-    CT_REGISTER_MODE: auto
-    CT_URL: http://mymachine:9000
-    LOCAL_URL: http://192.168.1.50:4400
-    CT_TOKEN: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Im1pY3Jvc2VydmljZSIsImNyZWF0ZWRBdCI6IjIwMTYtMDktMTQifQ.IRCIRm1nfIQTfda_Wb6Pg-341zhV8soAgzw7dd5HxxQ
-    API_VERSION: v1
-  command: develop
-  volumes:
-    - ./app:/opt/forest-watcher/app
+version: "3"
+services:
+  develop:
+    build: .
+    ports:
+      - "4400:4400"
+    container_name: forest-watcher-develop
+    environment:
+      PORT: 4400
+      NODE_PATH: app/src
+      CT_REGISTER_MODE: auto
+      CT_URL: http://mymachine:9000
+      LOCAL_URL: http://192.168.1.50:4400
+      CT_TOKEN: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Im1pY3Jvc2VydmljZSIsImNyZWF0ZWRBdCI6IjIwMTYtMDktMTQifQ.IRCIRm1nfIQTfda_Wb6Pg-341zhV8soAgzw7dd5HxxQ
+      API_VERSION: v1
+    command: develop
+    volumes:
+      - ./app:/opt/forest-watcher/app
 

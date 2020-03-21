@@ -1,0 +1,26 @@
+language: node_js
+node_js:
+  - "12"
+cache:
+  directories:
+  - "node_modules"
+env:
+  global:
+    - CC_TEST_REPORTER_ID=3e4e6881aa3d231297c67ced38d7717382ec95c9f09baef6cf00650031b4eb11
+    - NODE_ENV=test
+    - PORT=4400
+    - API_VERSION=v1
+    - CT_REGISTER_MODE=auto
+    - LOCAL_URL=http://127.0.0.1:4400
+    - CT_URL=http://127.0.0.1:9000
+    - CT_TOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Im1pY3Jvc2VydmljZSIsImNyZWF0ZWRBdCI6IjIwMTYtMDktMTQifQ.IRCIRm1nfIQTfda_Wb6Pg-341zhV8soAgzw7dd5HxxQ
+
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+script:
+  - yarn test
+  - yarn run coverage
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT

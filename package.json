@@ -6,6 +6,7 @@
   "main": "index.js",
   "scripts": {
     "test": "NODE_PATH=app/src node ./node_modules/.bin/grunt --gruntfile app/Gruntfile.js e2eTest",
+    "coverage": "NODE_PATH=app/src node $NODE_DEBUG_OPTION ./node_modules/.bin/grunt --gruntfile app/Gruntfile.js nyc",
     "start": "NODE_PATH=app/src node app/index.js"
   },
   "keywords": [
@@ -13,35 +14,47 @@
     "koa2",
     "nodejs"
   ],
-  "author": "https://github.com/j8seangel",
+  "author": {
+    "name": "Vizzuality",
+    "email": "hello@vizzuality.com",
+    "url": "http://vizzuality.com/"
+  },
+  "engines": {
+    "node": "~12"
+  },
   "license": "MIT",
   "devDependencies": {
-    "babel-eslint": "^8.2.3",
-    "eslint": "^4.19.1",
-    "eslint-config-airbnb-base": "^12.1.0",
-    "eslint-plugin-import": "^2.11.0",
-    "grunt": "^1.0.1",
+    "chai": "^4.2.0",
+    "chai-datetime": "^1.5.0",
+    "chai-http": "^4.3.0",
+    "eslint": "^6.0.1",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.18.0",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-mocha": "^6.2.1",
+    "eslint-plugin-react": "^7.14.2",
+    "grunt": "^1.1.0",
     "grunt-apidoc": "^0.11.0",
-    "grunt-cli": "^1.2.0",
-    "grunt-contrib-clean": "^1.0.0",
-    "grunt-contrib-jshint": "^1.1.0",
-    "grunt-contrib-watch": "^1.0.0",
-    "grunt-express-server": "^0.5.1",
-    "grunt-mocha-test": "^0.13.2",
-    "grunt-notify": "^0.4.3",
-    "load-grunt-tasks": "^3.4.0",
-    "mocha": "^3.2.0",
-    "nock": "^9.0.2",
-    "request-promise-native": "1.0.5",
-    "should": "^11.2.1",
-    "superagent": "^3.3.1",
-    "supertest": "^3.0.0"
+    "grunt-cli": "^1.3.2",
+    "grunt-contrib-clean": "^2.0.0",
+    "grunt-contrib-jshint": "^2.1.0",
+    "grunt-contrib-watch": "^1.1.0",
+    "grunt-express-server": "^0.5.4",
+    "grunt-mocha-test": "^0.13.3",
+    "grunt-notify": "^0.4.5",
+    "grunt-simple-nyc": "^3.0.0",
+    "husky": ">=4",
+    "lint-staged": ">=10",
+    "load-grunt-tasks": "^5.1.0",
+    "mocha": "^7.1.1",
+    "nock": "^12.0.3",
+    "nyc": "^14.1.1"
   },
   "dependencies": {
     "bunyan": "^1.8.5",
     "config": "^1.21.0",
     "cron-parser": "^2.3.1",
-    "ct-register-microservice-node": "^2.1.3",
+    "ct-register-microservice-node": "^2.1.7",
     "jsonapi-serializer": "3.5.6",
     "kcors": "^2.1.1",
     "koa": "^2.0.0",
@@ -51,11 +64,19 @@
     "koa-mount": "^2.0.0",
     "koa-multer": "^1.0.1",
     "koa-router": "^7.0.1",
+    "koa-simple-healthcheck": "^0.0.1",
     "koa-validate": "^1.0.7",
-    "microservice-cache-middleware": "^1.0.0",
     "moment": "2.22.1",
     "request": "^2.79.0",
     "request-promise": "^4.1.1",
     "uuid": "^3.0.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": "eslint --cache --fix"
   }
 }

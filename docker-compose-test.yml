@@ -8,6 +8,7 @@ services:
     environment:
       PORT: 4400
       NODE_PATH: app/src
+      CT_REGISTER_MODE: auto
       NODE_ENV: test
       CT_URL: http://mymachine:9000
       API_VERSION: v1

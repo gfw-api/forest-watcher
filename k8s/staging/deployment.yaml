@@ -3,8 +3,8 @@ kind: Deployment
 metadata:
   namespace: fw
   labels:
-    name: {name}
-  name: {name}
+    name: forest-watcher-api
+  name: forest-watcher-api
 spec:
   revisionHistoryLimit: 0
   template:
@@ -12,11 +12,11 @@ spec:
       annotations:
         chaos.alpha.kubernetes.io/enabled: "true"
       labels:
-        name: {name}
+        name: forest-watcher-api
     spec:
       containers:
-      - name: {name}
-        image: vizzuality/{name}
+      - name: forest-watcher-api
+        image: vizzuality/forest-watcher-api
         imagePullPolicy: Always
         resources:
           requests:
@@ -32,7 +32,7 @@ spec:
           - name: NODE_PATH
             value: app/src
           - name: LOCAL_URL
-            value: http://{name}.fw.svc.cluster.local:4400
+            value: http://forest-watcher-api.fw.svc.cluster.local:4400
           - name: CT_URL
             valueFrom:
                 secretKeyRef:

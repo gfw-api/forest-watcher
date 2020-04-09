@@ -9,11 +9,18 @@ spec:
   revisionHistoryLimit: 0
   template:
     metadata:
-      annotations:
-        chaos.alpha.kubernetes.io/enabled: "true"
       labels:
         name: forest-watcher-api
     spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: type
+                    operator: In
+                    values:
+                      - apps
       containers:
       - name: forest-watcher-api
         image: vizzuality/forest-watcher-api

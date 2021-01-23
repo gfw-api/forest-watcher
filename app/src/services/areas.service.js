@@ -1,5 +1,5 @@
 const logger = require('logger');
-const ct = require('ct-register-microservice-node');
+const { RWAPIMicroservice } = require('rw-api-microservice-node');
 const { createReadStream } = require('fs');
 const CoverageService = require('services/coverage.service');
 const GeoStoreService = require('services/geostore.service');
@@ -12,7 +12,7 @@ class AreasService {
     static async getUserAreas(userId) {
         logger.info('Get user areas', userId);
         try {
-            const areas = await ct.requestToMicroservice({
+            const areas = await RWAPIMicroservice.requestToMicroservice({
                 uri: `/area/fw/${userId}`,
                 method: 'GET',
                 json: true
@@ -50,7 +50,7 @@ class AreasService {
         }
         try {
             logger.info('Creating area with geostore and coverage ready');
-            area = await ct.requestToMicroservice({
+            area = await RWAPIMicroservice.requestToMicroservice({
                 uri: `/area/fw/${userId}`,
                 method: 'POST',
                 formData: {

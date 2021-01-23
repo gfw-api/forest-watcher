@@ -3,6 +3,7 @@ const nock = require('nock');
 const { USERS } = require('./utils/test.constants');
 
 const { getTestServer } = require('./utils/test-server');
+const { mockGetUserFromToken } = require('./utils/helpers');
 
 nock.disableNetConnect();
 nock.enableNetConnect(process.env.HOST_IP);
@@ -28,6 +29,8 @@ describe('Get areas tests', () => {
     });
 
     it('Get all areas while being logged in should...', async () => {
+        mockGetUserFromToken(USERS.USER);
+
         nock(process.env.CT_URL)
             .get(`/v1/area/fw/${USERS.USER.id}`)
             .reply(200, {
@@ -121,7 +124,8 @@ describe('Get areas tests', () => {
             });
 
         const response = await requester
-            .get(`/api/v1/forest-watcher/area?loggedUser=${JSON.stringify(USERS.USER)}`);
+            .get(`/api/v1/forest-watcher/area`)
+            .set('Authorization', `Bearer abcd`);
 
         response.status.should.equal(200);
         response.body.should.have.property('data').and.be.an('array').and.length(1);

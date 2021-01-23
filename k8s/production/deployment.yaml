@@ -65,6 +65,23 @@ spec:
                 secretKeyRef:
                   key: API_VERSION
                   name: mssecrets
+            - name: FASTLY_ENABLED
+              valueFrom:
+                secretKeyRef:
+                  key: FASTLY_ENABLED
+                  name: mssecrets
+            - name: FASTLY_APIKEY
+              valueFrom:
+                secretKeyRef:
+                  key: FASTLY_APIKEY
+                  name: mssecrets
+                  optional: true
+            - name: FASTLY_SERVICEID
+              valueFrom:
+                secretKeyRef:
+                  key: FASTLY_SERVICEID
+                  name: mssecrets
+                  optional: true
           image: vizzuality/forest-watcher-api
           imagePullPolicy: Always
           livenessProbe:

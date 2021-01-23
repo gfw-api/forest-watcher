@@ -14,5 +14,6 @@ services:
       LOCAL_URL: http://forest-watcher.fw.svc.cluster.local:4400
       API_VERSION: v1
       STAMPERY_TOKEN: token
+      CT_TOKEN: cttoken
       FASTLY_ENABLED: "false"
     command: test

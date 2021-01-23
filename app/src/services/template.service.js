@@ -1,5 +1,5 @@
 const logger = require('logger');
-const ctRegisterMicroservice = require('ct-register-microservice-node');
+const { RWAPIMicroservice } = require('rw-api-microservice-node');
 const deserializer = require('serializers/deserializer');
 
 class TemplateService {
@@ -7,7 +7,7 @@ class TemplateService {
     static async getTemplate(templateId) {
         logger.info('Getting template with id', templateId);
         try {
-            const template = await ctRegisterMicroservice.requestToMicroservice({
+            const template = await RWAPIMicroservice.requestToMicroservice({
                 uri: `/reports/${templateId}`,
                 method: 'GET',
                 json: true

@@ -1,5 +1,5 @@
 const logger = require('logger');
-const ctRegisterMicroservice = require('ct-register-microservice-node');
+const { RWAPIMicroservice } = require('rw-api-microservice-node');
 const deserializer = require('serializers/deserializer');
 
 class CoverageService {
@@ -8,7 +8,7 @@ class CoverageService {
         const uri = `/coverage/intersect?geostore=${geostoreId}${slugs ? `&slugs=${slugs}` : ''}`;
         logger.info('Getting coverage with geostore id and uri', geostoreId, uri);
         try {
-            const coverage = await ctRegisterMicroservice.requestToMicroservice({
+            const coverage = await RWAPIMicroservice.requestToMicroservice({
                 uri,
                 method: 'GET',
                 json: true

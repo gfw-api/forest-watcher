@@ -1,6 +1,6 @@
 # Forest Watcher microservice
 
-[![Build Status](https://travis-ci.org/gfw-api/forest-watcher.svg?branch=develop)](https://travis-ci.org/gfw-api/forest-watcher)
+[![Build Status](https://travis-ci.com/gfw-api/forest-watcher.svg?branch=dev)](https://travis-ci.com/gfw-api/forest-watcher)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/dfce5cd3c6aa92bf95ea/test_coverage)](https://codeclimate.com/github/gfw-api/forest-watcher/test_coverage)
 
 ## Dependencies

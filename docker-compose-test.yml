@@ -11,6 +11,7 @@ services:
       CT_REGISTER_MODE: auto
       NODE_ENV: test
       CT_URL: http://mymachine:9000
+      LOCAL_URL: http://forest-watcher.fw.svc.cluster.local:4400
       API_VERSION: v1
       STAMPERY_TOKEN: token
       FASTLY_ENABLED: "false"

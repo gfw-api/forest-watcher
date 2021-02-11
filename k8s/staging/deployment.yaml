@@ -82,7 +82,7 @@ spec:
                   key: FASTLY_SERVICEID
                   name: mssecrets
                   optional: true
-          image: vizzuality/forest-watcher-api
+          image: gfwdockerhub/forest-watcher-api
           imagePullPolicy: Always
           livenessProbe:
             failureThreshold: 3

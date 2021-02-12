@@ -7,7 +7,6 @@
 		{
 			"path": "/v1/forest-watcher/area",
 			"method": "GET",
-			"authenticated": true,
 			"redirect": {
 				"method": "GET",
 				"path": "/api/v1/forest-watcher/area"
@@ -16,7 +15,6 @@
 		{
 			"path": "/v1/forest-watcher/area",
 			"method": "POST",
-			"authenticated": true,
 			"redirect": {
 				"method": "POST",
 				"path": "/api/v1/forest-watcher/area"

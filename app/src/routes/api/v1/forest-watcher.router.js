@@ -158,7 +158,20 @@ class ForestWatcherRouter {
 
 }
 
-router.get('/area', ForestWatcherRouter.getUserAreas);
-router.post('/area', ForestWatcherRouter.createArea);
+const isAuthenticatedMiddleware = async (ctx, next) => {
+    logger.info(`Verifying if user is authenticated`);
+    const { query, body } = ctx.request;
+
+    const user = { ...(query.loggedUser ? JSON.parse(query.loggedUser) : {}), ...body.loggedUser };
+
+    if (!user || !user.id) {
+        ctx.throw(401, 'Unauthorized');
+        return;
+    }
+    await next();
+};
+
+router.get('/area', isAuthenticatedMiddleware, ForestWatcherRouter.getUserAreas);
+router.post('/area', isAuthenticatedMiddleware, ForestWatcherRouter.createArea);
 
 module.exports = router;

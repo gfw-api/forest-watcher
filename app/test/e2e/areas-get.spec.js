@@ -20,12 +20,12 @@ describe('Get areas tests', () => {
         }
     });
 
-    // TODO: this probably should return an error, as this endpoint is useless without a login
-    it('Get all areas without being logged in should return a 200 and no data', async () => {
+    it('Get all areas without being logged in should return a 401 error', async () => {
         const response = await requester.get(`/api/v1/forest-watcher/area`);
 
-        response.status.should.equal(200);
-        response.body.should.have.property('data').and.be.an('array').and.length(0);
+        response.status.should.equal(401);
+        response.body.should.have.property('errors').and.be.an('array');
+        response.body.errors[0].should.have.property('detail').and.equal('Unauthorized');
     });
 
     it('Get all areas while being logged in should...', async () => {

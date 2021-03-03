@@ -1,3 +1,8 @@
+## 03/03/2021
+
+- Fix regression in area creation.
+- Add tests for area creation.
+
 ## 12/02/2021
 
 - Remove dependency on CT's `authenticated` functionality

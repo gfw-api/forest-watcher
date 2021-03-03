@@ -7,7 +7,6 @@ const loader = require('loader');
 const convert = require('koa-convert');
 const { RWAPIMicroservice } = require('rw-api-microservice-node');
 const ErrorSerializer = require('serializers/error.serializer');
-const koaValidate = require('koa-validate');
 const koaSimpleHealthCheck = require('koa-simple-healthcheck');
 const koaBody = require('koa-body')({
     multipart: true,
@@ -49,8 +48,6 @@ app.use(async (ctx, next) => {
 
 app.use(koaLogger());
 app.use(koaSimpleHealthCheck());
-
-koaValidate(app);
 
 app.use(RWAPIMicroservice.bootstrap({
     name: config.get('service.name'),

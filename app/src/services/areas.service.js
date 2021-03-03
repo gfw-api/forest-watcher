@@ -53,14 +53,14 @@ class AreasService {
             area = await RWAPIMicroservice.requestToMicroservice({
                 uri: `/area/fw/${userId}`,
                 method: 'POST',
-                formData: {
+                body: {
                     name,
                     geostore: geostore.id,
                     image: createReadStream(image.path)
                 }
             });
             logger.info('Area created', area);
-            return { geostore, area: JSON.parse(area), coverage };
+            return { geostore, area: area.data, coverage };
         } catch (e) {
             logger.error('Error while creating area with geostore', e);
             throw e;

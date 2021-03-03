@@ -12,7 +12,7 @@ chai.should();
 
 const requester = getTestServer();
 
-describe('Get areas tests', () => {
+describe('Get areas', () => {
 
     before(async () => {
         if (process.env.NODE_ENV !== 'test') {

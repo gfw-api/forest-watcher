@@ -4,6 +4,7 @@ const AreasService = require('services/areas.service');
 const GeoStoreService = require('services/geostore.service');
 const CoverageService = require('services/coverage.service');
 const TemplatesService = require('services/template.service');
+const AreaValidator = require('validators/area.validator');
 const moment = require('moment');
 const config = require('config');
 
@@ -74,11 +75,7 @@ class ForestWatcherRouter {
     }
 
     static getUser(ctx) {
-        let user = Object.assign({}, ctx.request.query.loggedUser ? JSON.parse(ctx.request.query.loggedUser) : {}, ctx.request.body.loggedUser);
-        if (ctx.request.body.fields) {
-            user = Object.assign(user, JSON.parse(ctx.request.body.fields.loggedUser));
-        }
-        return user;
+        return Object.assign({}, ctx.request.query.loggedUser ? JSON.parse(ctx.request.query.loggedUser) : {}, ctx.request.body.loggedUser);
     }
 
     static getDatasetsWithActive(datasets = []) {
@@ -141,7 +138,7 @@ class ForestWatcherRouter {
                 }, JSON.parse(geojson), user.id);
                 logger.info('Created area', area, geostore, coverage);
                 try {
-                    [data] = await ForestWatcherRouter.buildAreasResponse([area.data], { geostore, coverage });
+                    [data] = await ForestWatcherRouter.buildAreasResponse([area], { geostore, coverage });
                 } catch (e) {
                     logger.error(e);
                     ctx.throw(e.status, 'Error while retrieving area\'s template');
@@ -172,6 +169,6 @@ const isAuthenticatedMiddleware = async (ctx, next) => {
 };
 
 router.get('/area', isAuthenticatedMiddleware, ForestWatcherRouter.getUserAreas);
-router.post('/area', isAuthenticatedMiddleware, ForestWatcherRouter.createArea);
+router.post('/area', isAuthenticatedMiddleware, AreaValidator.validateCreation, ForestWatcherRouter.createArea);
 
 module.exports = router;

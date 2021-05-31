@@ -109,6 +109,13 @@
     lodash "^4.17.13"
     to-fast-properties "^2.0.0"
 
+"@koa/cors@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@koa/cors/-/cors-3.1.0.tgz#618bb073438cfdbd3ebd0e648a76e33b84f3a3b2"
+  integrity sha512-7ulRC1da/rBa6kj6P4g2aJfnET3z8Uf3SWu60cjbtxTA5g8lxRdX/Bd2P92EagGwwAhANeNw8T8if99rJliR6Q==
+  dependencies:
+    vary "^1.1.2"
+
 "@samverschueren/stream-to-observable@^0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@samverschueren/stream-to-observable/-/stream-to-observable-0.3.0.tgz#ecdf48d532c58ea477acfcab80348424f8d0662f"
@@ -1870,9 +1877,8 @@ fast-safe-stringify@^2.0.4:
   resolved "https://registry.yarnpkg.com/fast-safe-stringify/-/fast-safe-stringify-2.0.7.tgz#124aa885899261f68aedb42a7c080de9da608743"
   integrity sha512-Utm6CdzT+6xsDk2m8S6uL8VHxNwI6Jub+e9NYTcAms28T84pTa25GJQV9j0CY0N1rM8hK4x6grpF2BQf+2qwVA==
 
-fastly-promises@tiagojsag/fastly-promises#master:
+"fastly-promises@github:tiagojsag/fastly-promises#master":
   version "0.0.0-semantically-released"
-  uid "14470364f0d4e62b8ff99c8f7e7dd7cb27039242"
   resolved "https://codeload.github.com/tiagojsag/fastly-promises/tar.gz/14470364f0d4e62b8ff99c8f7e7dd7cb27039242"
   dependencies:
     axios "0.21.1"
@@ -5067,13 +5073,15 @@ run-async@^2.4.0:
   dependencies:
     is-promise "^2.1.0"
 
-rw-api-microservice-node@^3.3.3:
-  version "3.3.3"
-  resolved "https://registry.yarnpkg.com/rw-api-microservice-node/-/rw-api-microservice-node-3.3.3.tgz#02084f2046820a3f7be5fc7de791cdf04fc56720"
-  integrity sha512-Old/4sUDUal7X1w5loPYu2cuYIygig2Qe8K1Q3A2vwm4E3QOEzBqgyRBQeC13wlnAKaskcUEFnHCBe+86FEYhg==
+rw-api-microservice-node@^3.4.1:
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/rw-api-microservice-node/-/rw-api-microservice-node-3.4.1.tgz#01b2876d2b2acc13aaf01d630784e10b7410e186"
+  integrity sha512-blxLH1IXYudV+fMzuXFDPqkQyfqgWg2XDhjpDwRBdxW6PRW8ztOh7IKhVHov/RWeonrVQI6OzLnYEWsv3CBw0Q==
   dependencies:
+    "@koa/cors" "^3.1.0"
     axios "^0.21.1"
     fastly-promises tiagojsag/fastly-promises#master
+    koa-compose "^4.1.0"
 
 rxjs@^6.3.3, rxjs@^6.5.3:
   version "6.5.4"

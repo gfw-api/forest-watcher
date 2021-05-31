@@ -1,3 +1,7 @@
+## 31/05/2021
+
+- Update `rw-api-microservice-node` to add CORS support.
+
 ## 03/03/2021
 
 - Fix regression in area creation.
